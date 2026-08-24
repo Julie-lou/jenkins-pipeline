@@ -1,6 +1,12 @@
 pipeline {
     agent any
-
+    parameters {
+        string(
+            name: 'BRANCH_NAME',
+            defaultValue: '',
+            description: 'Git branch to build'
+        )
+    }
     environment {
         DOCKER_IMAGE = 'julielou/python-ci-app'
     }
@@ -9,7 +15,7 @@ pipeline {
 
         stage('Checkout') {
             steps {
-                git branch: 'main',
+                git branch: '${params.BRANCH_NAME}',
                     url: 'https://github.com/Julie-lou/python-ci-app.git'
             }
         }
@@ -37,6 +43,13 @@ pipeline {
                         docker push ${DOCKER_IMAGE}:latest
                     '''
                 }
+            }
+        }
+         stage('Cleanup Local Image') {
+            steps {
+                sh '''
+                    docker rmi ${DOCKER_IMAGE}:${BUILD_NUMBER}
+                '''
             }
         }
     }
