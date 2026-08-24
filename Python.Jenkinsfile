@@ -15,7 +15,7 @@ pipeline {
 
         stage('Checkout') {
             steps {
-                git branch: '${params.BRANCH_NAME}',
+                git branch: "${params.BRANCH_NAME}",
                     url: 'https://github.com/Julie-lou/python-ci-app.git'
             }
         }
